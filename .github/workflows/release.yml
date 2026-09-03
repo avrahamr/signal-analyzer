@@ -13,10 +13,13 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Version from tag
+        id: version
+        run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
       - uses: ./.github/actions/build-app
         id: build
         with:
-          version: ${{ startsWith(github.ref_name, 'v') && substr(github.ref_name, 1) || github.ref_name }}
+          version: ${{ steps.version.outputs.version }}
       - name: Publish release
         env:
           GH_TOKEN: ${{ github.token }}
