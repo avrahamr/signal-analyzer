@@ -8,7 +8,7 @@ struct WiFiSignalApp: App {
     @StateObject private var bluetooth = BluetoothScanner()
 
     var body: some Scene {
-        WindowGroup("WiFi Signal") {
+        WindowGroup("Signal Analyzer") {
             ContentView()
                 .environmentObject(settings)
                 .environmentObject(store)

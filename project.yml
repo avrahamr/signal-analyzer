@@ -23,13 +23,13 @@ targets:
     info:
       path: Sources/WiFiSignal/Info.plist
       properties:
-        CFBundleDisplayName: WiFi Signal
+        CFBundleDisplayName: Signal Analyzer
         LSMinimumSystemVersion: "14.0"
         NSHighResolutionCapable: true
         # macOS hides SSID/BSSID from CoreWLAN unless the app has Location access.
-        NSLocationUsageDescription: WiFi Signal needs Location access because macOS only reveals nearby network names to apps that have it.
-        NSLocationWhenInUseUsageDescription: WiFi Signal needs Location access because macOS only reveals nearby network names to apps that have it.
-        NSBluetoothAlwaysUsageDescription: WiFi Signal listens for nearby Bluetooth LE devices to show their signal strength.
+        NSLocationUsageDescription: Signal Analyzer needs Location access because macOS only reveals nearby network names to apps that have it.
+        NSLocationWhenInUseUsageDescription: Signal Analyzer needs Location access because macOS only reveals nearby network names to apps that have it.
+        NSBluetoothAlwaysUsageDescription: Signal Analyzer listens for nearby Bluetooth LE devices to show their signal strength.
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.avrahamr.WiFiSignal

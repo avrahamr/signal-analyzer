@@ -1,4 +1,7 @@
-# WiFi Signal
+# Signal Analyzer
+
+Open-source macOS app for looking at the Wi-Fi and Bluetooth radio
+environment around your Mac. MIT licensed.
 
 A macOS app that shows the radio environment around you: Wi-Fi networks with
 live signal strength, a spectrum view of channel occupancy, RSSI history, a
@@ -102,3 +105,15 @@ Tests/WiFiSignalTests/          XCTest unit tests (parser, maths, decoding)
 
 Recommended next tasks, with reasoning and scope, live in
 [ROADMAP.md](ROADMAP.md).
+
+## Contributing
+
+Issues and pull requests are welcome. Run `make test` before opening a PR;
+new decoding logic (information elements, Bluetooth advertisements, channel
+maths) should come with unit tests using hand-built fixtures like the
+existing ones under `Tests/`. See [ROADMAP.md](ROADMAP.md) for tasks that are
+up for grabs.
+
+## License
+
+[MIT](LICENSE). Use it for anything.

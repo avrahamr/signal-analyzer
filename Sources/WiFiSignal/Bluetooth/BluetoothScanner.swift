@@ -26,14 +26,14 @@ final class BluetoothScanner: NSObject, ObservableObject {
     /// Human-readable reason results are missing, or nil when scanning is healthy.
     var problemDescription: String? {
         switch authorization {
-        case .denied: return "Bluetooth access denied — allow WiFi Signal under Privacy & Security › Bluetooth."
+        case .denied: return "Bluetooth access denied — allow Signal Analyzer under Privacy & Security › Bluetooth."
         case .restricted: return "Bluetooth access is restricted on this Mac."
         default: break
         }
         switch state {
         case .poweredOff: return "Bluetooth is turned off."
         case .unsupported: return "This Mac does not support Bluetooth LE."
-        case .unauthorized: return "Bluetooth access denied — allow WiFi Signal under Privacy & Security › Bluetooth."
+        case .unauthorized: return "Bluetooth access denied — allow Signal Analyzer under Privacy & Security › Bluetooth."
         default: return nil
         }
     }
