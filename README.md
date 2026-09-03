@@ -7,10 +7,10 @@
 Open-source macOS app for looking at the Wi-Fi and Bluetooth radio
 environment around your Mac. MIT licensed.
 
-![Spectrum view: one curve per network over the channels it occupies, with DFS shading and the recommended block bracketed](docs/screenshots/spectrum.png)
+![Spectrum view: one curve per network over the channels it occupies, DFS channels shaded, the router's current block bracketed and a "Keep Auto" verdict](docs/screenshots/spectrum.png)
 
 <p align="center">
-  <img src="docs/screenshots/history.png" alt="RSSI history chart" width="49%">
+  <img src="docs/screenshots/networks.png" alt="Networks table sorted by signal" width="49%">
   <img src="docs/screenshots/radar.png" alt="Bluetooth proximity radar" width="49%">
 </p>
 
