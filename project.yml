@@ -1,0 +1,62 @@
+name: WiFiSignal
+options:
+  bundleIdPrefix: com.avrahamr
+  deploymentTarget:
+    macOS: "14.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MACOSX_DEPLOYMENT_TARGET: "14.0"
+    MARKETING_VERSION: 0.1.0
+    CURRENT_PROJECT_VERSION: 1
+    # Ad-hoc "Sign to Run Locally": no Apple Developer team needed.
+    CODE_SIGN_IDENTITY: "-"
+    CODE_SIGN_STYLE: Manual
+    ENABLE_HARDENED_RUNTIME: NO
+targets:
+  WiFiSignal:
+    type: application
+    platform: macOS
+    sources:
+      - Sources/WiFiSignal
+    info:
+      path: Sources/WiFiSignal/Info.plist
+      properties:
+        CFBundleDisplayName: WiFi Signal
+        LSMinimumSystemVersion: "14.0"
+        NSHighResolutionCapable: true
+        # macOS hides SSID/BSSID from CoreWLAN unless the app has Location access.
+        NSLocationUsageDescription: WiFi Signal needs Location access because macOS only reveals nearby network names to apps that have it.
+        NSLocationWhenInUseUsageDescription: WiFi Signal needs Location access because macOS only reveals nearby network names to apps that have it.
+        NSBluetoothAlwaysUsageDescription: WiFi Signal listens for nearby Bluetooth LE devices to show their signal strength.
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.avrahamr.WiFiSignal
+    dependencies:
+      - sdk: CoreWLAN.framework
+      - sdk: CoreLocation.framework
+      - sdk: CoreBluetooth.framework
+      - sdk: SystemConfiguration.framework
+  WiFiSignalTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - Tests/WiFiSignalTests
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+    dependencies:
+      - target: WiFiSignal
+schemes:
+  WiFiSignal:
+    build:
+      targets:
+        WiFiSignal: all
+        WiFiSignalTests: [test]
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - WiFiSignalTests
