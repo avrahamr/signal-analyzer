@@ -13,6 +13,10 @@ environment around your Mac. MIT licensed.
   <img src="docs/screenshots/networks.png" alt="Networks table sorted by signal" width="49%">
   <img src="docs/screenshots/radar.png" alt="Bluetooth proximity radar" width="49%">
 </p>
+<p align="center">
+  <img src="docs/screenshots/bluetooth.png" alt="Bluetooth LE devices with manufacturer and advertisement type" width="49%">
+  <img src="docs/screenshots/history.png" alt="RSSI history chart" width="49%">
+</p>
 
 <sub>Screenshots use the built-in <code>--demo</code> data; the networks and devices are fictional.</sub>
 
