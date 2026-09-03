@@ -125,9 +125,13 @@ struct BluetoothRadarView: View {
     }
 
     func angle(for id: UUID) -> Double {
-        let bytes = id.uuid
-        let value = UInt32(bytes.0) << 24 | UInt32(bytes.1) << 16 | UInt32(bytes.2) << 8 | UInt32(bytes.3)
-        return Double(value) / Double(UInt32.max) * 2 * .pi
+        // Hash all 16 bytes so IDs that share a prefix still spread out.
+        var hash: UInt32 = 2_166_136_261
+        withUnsafeBytes(of: id.uuid) { bytes in
+            for byte in bytes { hash = (hash ^ UInt32(byte)) &* 16_777_619 }
+        }
+        let scrambled = (hash &* 2_654_435_761) >> 8
+        return Double(scrambled & 0xFFFF) / 65536 * 2 * .pi
     }
 
     private func position(for device: BluetoothDevice, center: CGPoint, maxRadius: CGFloat) -> CGPoint {

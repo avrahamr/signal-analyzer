@@ -1,0 +1,37 @@
+name: Bug report
+description: Something is wrong or shows incorrect data
+labels: [bug]
+body:
+  - type: input
+    id: macos
+    attributes:
+      label: macOS version
+      placeholder: "26.6.2"
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: App version or commit
+      placeholder: "v0.1.0 or nightly 21ba40a"
+    validations:
+      required: true
+  - type: dropdown
+    id: location
+    attributes:
+      label: Location access granted?
+      options: ["Yes", "No", "Not sure"]
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: raw
+    attributes:
+      label: Raw information elements (for decoding bugs)
+      description: Networks tab → select the network → Advanced → Raw information elements. Paste the hex here.
+      render: text

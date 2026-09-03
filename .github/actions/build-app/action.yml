@@ -1,0 +1,63 @@
+name: Build Signal Analyzer
+description: Generate the Xcode project, run tests, build Release and zip the app.
+inputs:
+  version:
+    description: Marketing version to stamp (e.g. 0.1.0). Leave empty to keep project.yml's value.
+    required: false
+    default: ""
+  run-tests:
+    description: Whether to run the unit tests first.
+    required: false
+    default: "true"
+outputs:
+  zip:
+    description: Path to the zipped app.
+    value: ${{ steps.package.outputs.zip }}
+runs:
+  using: composite
+  steps:
+    - name: Select Xcode
+      shell: bash
+      run: |
+        sudo xcode-select -s "$(ls -d /Applications/Xcode*.app | sort -V | tail -1)/Contents/Developer"
+        xcodebuild -version
+
+    - name: Install XcodeGen
+      shell: bash
+      run: brew install xcodegen
+
+    - name: Generate project
+      shell: bash
+      run: xcodegen generate
+
+    - name: Test
+      if: inputs.run-tests == 'true'
+      shell: bash
+      run: |
+        set -o pipefail
+        xcodebuild -project WiFiSignal.xcodeproj -scheme WiFiSignal -configuration Debug \
+          -derivedDataPath build test | grep -E "Test Case|Executed|error:|warning:|\*\* TEST" || true
+        test "${PIPESTATUS[0]}" -eq 0
+
+    - name: Build Release
+      shell: bash
+      run: |
+        set -o pipefail
+        EXTRA=""
+        if [ -n "${{ inputs.version }}" ]; then EXTRA="MARKETING_VERSION=${{ inputs.version }}"; fi
+        xcodebuild -project WiFiSignal.xcodeproj -scheme WiFiSignal -configuration Release \
+          -derivedDataPath build CURRENT_PROJECT_VERSION=${{ github.run_number }} $EXTRA build \
+          | grep -E "error:|warning: .*\.swift|\*\* BUILD" || true
+        test "${PIPESTATUS[0]}" -eq 0
+
+    - name: Package
+      id: package
+      shell: bash
+      run: |
+        mkdir -p dist
+        APP="build/Build/Products/Release/Signal Analyzer.app"
+        codesign --verify --deep --strict "$APP"
+        ZIP="dist/Signal-Analyzer-macOS.zip"
+        ditto -c -k --keepParent "$APP" "$ZIP"
+        ls -la dist
+        echo "zip=$ZIP" >> "$GITHUB_OUTPUT"

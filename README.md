@@ -1,7 +1,44 @@
 # Signal Analyzer
 
+[![CI](https://github.com/avrahamr/signal-analyzer/actions/workflows/ci.yml/badge.svg)](https://github.com/avrahamr/signal-analyzer/actions/workflows/ci.yml)
+[![Latest release](https://img.shields.io/github/v/release/avrahamr/signal-analyzer?include_prereleases&label=download)](https://github.com/avrahamr/signal-analyzer/releases)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 Open-source macOS app for looking at the Wi-Fi and Bluetooth radio
 environment around your Mac. MIT licensed.
+
+![Spectrum view: one curve per network over the channels it occupies, with DFS shading and the recommended block bracketed](docs/screenshots/spectrum.png)
+
+<p align="center">
+  <img src="docs/screenshots/history.png" alt="RSSI history chart" width="49%">
+  <img src="docs/screenshots/radar.png" alt="Bluetooth proximity radar" width="49%">
+</p>
+
+<sub>Screenshots use the built-in <code>--demo</code> data; the networks and devices are fictional.</sub>
+
+## Download
+
+- **Releases**: https://github.com/avrahamr/signal-analyzer/releases — tagged
+  versions, plus a rolling **Nightly** pre-release built from every commit on
+  `master`.
+- Unzip and drag **Signal Analyzer.app** to Applications. Requires macOS 14
+  or newer.
+
+The app is signed ad hoc and **not notarised** (that needs a paid Apple
+Developer account), so the first launch is blocked by Gatekeeper. Either open
+System Settings → Privacy & Security and click **Open Anyway**, or clear the
+quarantine flag once:
+
+```bash
+xattr -d com.apple.quarantine "/Applications/Signal Analyzer.app"
+```
+
+Grant Location access when asked; without it macOS hides network names.
+Because the signature changes with every build, macOS may ask for Location
+and Bluetooth permission again after updating.
+
+Every pull request also produces a build as a workflow artifact (login
+required, kept 30 days).
 
 A macOS app that shows the radio environment around you: Wi-Fi networks with
 live signal strength, a spectrum view of channel occupancy, RSSI history, a
@@ -108,11 +145,9 @@ Recommended next tasks, with reasoning and scope, live in
 
 ## Contributing
 
-Issues and pull requests are welcome. Run `make test` before opening a PR;
-new decoding logic (information elements, Bluetooth advertisements, channel
-maths) should come with unit tests using hand-built fixtures like the
-existing ones under `Tests/`. See [ROADMAP.md](ROADMAP.md) for tasks that are
-up for grabs.
+Issues and pull requests are welcome; see [CONTRIBUTING.md](CONTRIBUTING.md).
+Every PR needs a green CI run and the maintainer's review. Planned work is in
+[ROADMAP.md](ROADMAP.md).
 
 ## License
 

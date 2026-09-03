@@ -43,6 +43,10 @@ final class ScanStore: ObservableObject {
 
     func refresh() {
         guard !isScanning else { return }
+        if DemoData.isEnabled {
+            apply(.success(DemoData.snapshot()))
+            return
+        }
         isScanning = true
         Task.detached(priority: .userInitiated) { [weak self] in
             let result: Result<ScanSnapshot, Error>

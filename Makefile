@@ -1,7 +1,7 @@
 PROJECT := WiFiSignal.xcodeproj
 SCHEME  := WiFiSignal
 DERIVED := build
-APP     := $(DERIVED)/Build/Products/Debug/WiFiSignal.app
+APP     := "$(DERIVED)/Build/Products/Debug/Signal Analyzer.app"
 
 .PHONY: gen open build run test clean
 

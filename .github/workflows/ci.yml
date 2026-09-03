@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build & test
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/build-app
+        id: build
+      - name: Upload app
+        uses: actions/upload-artifact@v4
+        with:
+          name: Signal-Analyzer-macOS
+          path: ${{ steps.build.outputs.zip }}
+          retention-days: 30
+
+  nightly:
+    name: Update nightly release
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: Signal-Analyzer-macOS
+          path: dist
+      - name: Publish rolling pre-release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git tag -f nightly "$GITHUB_SHA"
+          git push -f origin refs/tags/nightly
+          NOTES="Automatic build of master at ${GITHUB_SHA::7} ($(date -u +'%Y-%m-%d %H:%M UTC')).
+
+          Unzip and drag **Signal Analyzer.app** to Applications. The app is not notarised, so the first launch needs
+          System Settings → Privacy & Security → **Open Anyway**, or:
+          \`xattr -d com.apple.quarantine \"/Applications/Signal Analyzer.app\"\`
+
+          macOS may ask for Location and Bluetooth permission again after updating."
+          if gh release view nightly >/dev/null 2>&1; then
+            gh release upload nightly dist/*.zip --clobber
+            gh release edit nightly --prerelease --title "Nightly (master)" --notes "$NOTES"
+          else
+            gh release create nightly dist/*.zip --prerelease --title "Nightly (master)" --notes "$NOTES"
+          fi

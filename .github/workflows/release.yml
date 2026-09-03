@@ -1,0 +1,45 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build & publish ${{ github.ref_name }}
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/build-app
+        id: build
+        with:
+          version: ${{ startsWith(github.ref_name, 'v') && substr(github.ref_name, 1) || github.ref_name }}
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          NOTES_FILE=$(mktemp)
+          cat > "$NOTES_FILE" <<'NOTES'
+          ## Install
+
+          Unzip and drag **Signal Analyzer.app** to Applications. The app is signed ad hoc and not notarised, so on
+          first launch macOS will refuse to open it. Either go to System Settings → Privacy & Security and click
+          **Open Anyway**, or run:
+
+          ```bash
+          xattr -d com.apple.quarantine "/Applications/Signal Analyzer.app"
+          ```
+
+          Grant Location access when asked; without it macOS hides network names. macOS may ask for Location and
+          Bluetooth permission again after updating.
+
+          ## Changes
+          NOTES
+          gh release create "$GITHUB_REF_NAME" "${{ steps.build.outputs.zip }}" \
+            --title "Signal Analyzer $GITHUB_REF_NAME" \
+            --notes-file "$NOTES_FILE" \
+            --generate-notes

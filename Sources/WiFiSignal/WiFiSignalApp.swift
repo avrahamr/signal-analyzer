@@ -7,6 +7,10 @@ struct WiFiSignalApp: App {
     @StateObject private var location = LocationPermission()
     @StateObject private var bluetooth = BluetoothScanner()
 
+    init() {
+        if ScreenshotExporter.runIfRequested() { exit(0) }
+    }
+
     var body: some Scene {
         WindowGroup("Signal Analyzer") {
             ContentView()

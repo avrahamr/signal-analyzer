@@ -41,6 +41,22 @@ final class BluetoothScanner: NSObject, ObservableObject {
     /// Creating the central manager triggers the system permission prompt, so
     /// this is called when the Bluetooth tab first appears rather than at launch.
     func start() {
+        if DemoData.isEnabled {
+            state = .poweredOn
+            authorization = .allowedAlways
+            isScanning = true
+            for device in DemoData.bluetoothDevices() { byID[device.id] = device }
+            publishTimer?.invalidate()
+            publishTimer = Timer.scheduledTimer(withTimeInterval: 1.5, repeats: true) { [weak self] _ in
+                Task { @MainActor in
+                    guard let self else { return }
+                    for device in DemoData.bluetoothDevices() { self.byID[device.id] = device }
+                    self.publish()
+                }
+            }
+            publish()
+            return
+        }
         if central == nil {
             central = CBCentralManager(delegate: self, queue: nil)
         } else {

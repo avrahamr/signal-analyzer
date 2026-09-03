@@ -134,10 +134,12 @@ enum SpectrumAnalysis {
 
     /// Stable colour per network so it matches across the table, spectrum and history.
     static func color(forNetworkID id: String) -> Color {
-        var hash: UInt32 = 5381
-        for byte in id.utf8 { hash = (hash &* 33) ^ UInt32(byte) }
-        // Golden-angle hue spacing spreads similar hashes apart.
-        let hue = (Double(hash % 1000) / 1000 * 0.618_033_988).truncatingRemainder(dividingBy: 1)
+        // FNV-1a, then a multiplicative scramble so IDs that differ by one
+        // byte (sequential BSSIDs) land on very different hues.
+        var hash: UInt32 = 2_166_136_261
+        for byte in id.utf8 { hash = (hash ^ UInt32(byte)) &* 16_777_619 }
+        let scrambled = (hash &* 2_654_435_761) >> 8
+        let hue = Double(scrambled & 0xFFFF) / 65536
         return Color(hue: hue, saturation: 0.72, brightness: 0.95)
     }
 

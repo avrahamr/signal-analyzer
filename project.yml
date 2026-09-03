@@ -33,6 +33,8 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.avrahamr.WiFiSignal
+        PRODUCT_NAME: Signal Analyzer
+        PRODUCT_MODULE_NAME: WiFiSignal
     dependencies:
       - sdk: CoreWLAN.framework
       - sdk: CoreLocation.framework
@@ -46,6 +48,8 @@ targets:
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/Signal Analyzer.app/Contents/MacOS/Signal Analyzer"
+        BUNDLE_LOADER: "$(TEST_HOST)"
     dependencies:
       - target: WiFiSignal
 schemes:

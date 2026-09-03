@@ -1,0 +1,3 @@
+# The maintainer reviews every change. Branch protection requires a code
+# owner approval before merging to master.
+* @avrahamr
